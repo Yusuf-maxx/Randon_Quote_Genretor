@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Random Quote Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      width: 400px;
+    }
+    #quoteBox {
+      font-size: 18px;
+      margin: 20px 0;
+      color: #333;
+      min-height: 50px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      background: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>💡 Random Quote Generator</h2>
+    <p id="quoteBox">Click the button to see a quote!</p>
+    <button id="btn">Show Quote</button>
+  </div>
+
+  <script>
+    // Array of motivational quotes
+    let quotes = [
+      "Believe in yourself!",
+      "Dream big and dare to fail.",
+      "Success is not final, failure is not fatal.",
+      "Hard work beats talent when talent doesn’t work hard.",
+      "Don’t stop until you’re proud.",
+      "Your limitation—it’s only your imagination.",
+      "Push yourself, because no one else is going to do it for you.",
+      "Great things never come from comfort zones.",
+      "Success doesn’t just find you. You have to go out and get it.",
+      "The harder you work for something, the greater you’ll feel when you achieve it.",
+      "Dream it. Wish it. Do it.",
+      "Don’t wait for opportunity. Create it.",
+      "Sometimes later becomes never. Do it now.",
+      "Little things make big days.",
+      "It’s going to be hard, but hard does not mean impossible."
+    ];
+
+    // Function to show random quote
+    function showQuote() {
+      let randomIndex = Math.floor(Math.random() * quotes.length);
+      document.getElementById("quoteBox").innerText = quotes[randomIndex];
+    }
+
+    // Button click event
+    document.getElementById("btn").addEventListener("click", showQuote);
+  </script>
+</body>
+</html>
