@@ -58,24 +58,42 @@
     let quotes = [];
 
     async function fetchQuotes() {
-  try {
-    let response = await fetch("https://type.fit/api/quotes");
-    quotes = await response.json();
-    showQuote();
-  } catch (error) {
-    document.getElementById("quoteBox").innerText = "Failed to load quotes!";
-    console.error("Error fetching quotes:", error);
-  }
-}
+      try {
+        // fetch multiple quotes so showQuote can pick a random one locally
+        const response = await fetch("https://api.quotable.io/quotes?limit=100");
+        const data = await response.json();
+        quotes = data.results || [];
 
-  function showQuote() {
-    let randomIndex = Math.floor(Math.random() * quotes.length);
-    let quote = quotes[randomIndex].text;
-    let author = quotes[randomIndex].author || "Unknown";
+        if (!quotes.length) {
+          throw new Error("No quotes returned from API");
+        }
 
-    document.getElementById("quoteBox").innerText = `"${quote}"`;
-    document.getElementById("author").innerText = "- " + author;
-   }
+        // show one after loading
+        showQuote();
+      } catch (error) {
+        document.getElementById("quoteBox").innerText = "Failed to load quotes!";
+        document.getElementById("author").innerText = "";
+        console.error("Error fetching quotes:", error);
+      }
+    }
+
+    function showQuote() {
+      if (!quotes.length) {
+        document.getElementById("quoteBox").innerText = "No quotes available.";
+        document.getElementById("author").innerText = "";
+        return;
+      }
+
+      let randomIndex = Math.floor(Math.random() * quotes.length);
+      let q = quotes[randomIndex];
+
+      // API returns 'content' and 'author' for quotable; handle fallbacks
+      let quote = q.content || q.text || "Unknown quote";
+      let author = q.author || "Unknown";
+
+      document.getElementById("quoteBox").innerText = `"${quote}"`;
+      document.getElementById("author").innerText = "- " + author;
+    }
 
     document.getElementById("btn").addEventListener("click", showQuote);
 
