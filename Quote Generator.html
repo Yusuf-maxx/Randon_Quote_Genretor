@@ -2,29 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Random Quote Generator</title>
+  <title>Random Quote Generator (API)</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f2f2f2;
+      background: #eef2f3;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      text-align: center;
     }
     .container {
-      background: white;
+      background: #fff;
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      width: 400px;
+      text-align: center;
+      width: 450px;
     }
     #quoteBox {
       font-size: 18px;
       margin: 20px 0;
+      min-height: 60px;
       color: #333;
-      min-height: 50px;
+    }
+    #author {
+      font-size: 16px;
+      font-style: italic;
+      color: #666;
+      margin-bottom: 15px;
     }
     button {
       padding: 10px 20px;
@@ -42,39 +48,38 @@
 </head>
 <body>
   <div class="container">
-    <h2>💡 Random Quote Generator</h2>
-    <p id="quoteBox">Click the button to see a quote!</p>
-    <button id="btn">Show Quote</button>
+    <h2>🌍 Random Quote Generator</h2>
+    <p id="quoteBox">Loading...</p>
+    <p id="author"></p>
+    <button id="btn">New Quote</button>
   </div>
 
   <script>
-    // Array of motivational quotes
-    let quotes = [
-      "Believe in yourself!",
-      "Dream big and dare to fail.",
-      "Success is not final, failure is not fatal.",
-      "Hard work beats talent when talent doesn’t work hard.",
-      "Don’t stop until you’re proud.",
-      "Your limitation—it’s only your imagination.",
-      "Push yourself, because no one else is going to do it for you.",
-      "Great things never come from comfort zones.",
-      "Success doesn’t just find you. You have to go out and get it.",
-      "The harder you work for something, the greater you’ll feel when you achieve it.",
-      "Dream it. Wish it. Do it.",
-      "Don’t wait for opportunity. Create it.",
-      "Sometimes later becomes never. Do it now.",
-      "Little things make big days.",
-      "It’s going to be hard, but hard does not mean impossible."
-    ];
+    let quotes = [];
 
-    // Function to show random quote
-    function showQuote() {
-      let randomIndex = Math.floor(Math.random() * quotes.length);
-      document.getElementById("quoteBox").innerText = quotes[randomIndex];
-    }
+    async function fetchQuotes() {
+  try {
+    let response = await fetch("https://type.fit/api/quotes");
+    quotes = await response.json();
+    showQuote();
+  } catch (error) {
+    document.getElementById("quoteBox").innerText = "Failed to load quotes!";
+    console.error("Error fetching quotes:", error);
+  }
+}
 
-    // Button click event
+  function showQuote() {
+    let randomIndex = Math.floor(Math.random() * quotes.length);
+    let quote = quotes[randomIndex].text;
+    let author = quotes[randomIndex].author || "Unknown";
+
+    document.getElementById("quoteBox").innerText = `"${quote}"`;
+    document.getElementById("author").innerText = "- " + author;
+   }
+
     document.getElementById("btn").addEventListener("click", showQuote);
+
+    fetchQuotes();
   </script>
 </body>
 </html>
