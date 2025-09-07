@@ -2,18 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Random Quote Generator (API)</title>
+  <title>Random Quote Generator with Background</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #eef2f3;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.8s ease-in-out;
     }
     .container {
-      background: #fff;
+      background: rgba(255, 255, 255, 0.85);
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
@@ -29,7 +33,7 @@
     #author {
       font-size: 16px;
       font-style: italic;
-      color: #666;
+      color: #555;
       margin-bottom: 15px;
     }
     button {
@@ -56,10 +60,18 @@
 
   <script>
     let quotes = [];
+    let backgrounds = [
+      "image/bg1.png",
+      "image/bg2.png",
+      "image/bg3.png",
+      "image/bg4.png",
+      "image/bg5.png",
+      "image/bg6.png",
+      "image/bg7.png",
+    ];
 
     async function fetchQuotes() {
       try {
-        // fetch multiple quotes so showQuote can pick a random one locally
         const response = await fetch("https://api.quotable.io/quotes?limit=100");
         const data = await response.json();
         quotes = data.results || [];
@@ -68,7 +80,6 @@
           throw new Error("No quotes returned from API");
         }
 
-        // show one after loading
         showQuote();
       } catch (error) {
         document.getElementById("quoteBox").innerText = "Failed to load quotes!";
@@ -78,21 +89,23 @@
     }
 
     function showQuote() {
-      if (!quotes.length) {
-        document.getElementById("quoteBox").innerText = "No quotes available.";
-        document.getElementById("author").innerText = "";
-        return;
-      }
+      if (!quotes.length) return;
 
       let randomIndex = Math.floor(Math.random() * quotes.length);
       let q = quotes[randomIndex];
 
-      // API returns 'content' and 'author' for quotable; handle fallbacks
-      let quote = q.content || q.text || "Unknown quote";
+      let quote = q.content || "Unknown quote";
       let author = q.author || "Unknown";
 
       document.getElementById("quoteBox").innerText = `"${quote}"`;
       document.getElementById("author").innerText = "- " + author;
+
+      changeBackground();
+    }
+
+    function changeBackground() {
+      let randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+      document.body.style.backgroundImage = `url('${randomBg}')`;
     }
 
     document.getElementById("btn").addEventListener("click", showQuote);
