@@ -25,3 +25,18 @@ It displays motivational quotes fetched from an API and changes the background i
 Tip_Calculator/<br>
 │-- TipCalculator.html<br>
 │-- README.md
+
+---
+
+## 🖼️ Preview  
+
+![Form Validator Demo](image/SS_FORM.png)
+
+---
+
+## ⚡ live demo 
+1. Clone this repository:  
+[Live Demo](https://yusuf-maxx.github.io/Randon_Quote_Genretor/)
+
+
+
