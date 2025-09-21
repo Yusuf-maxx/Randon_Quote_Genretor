@@ -59,58 +59,69 @@
   </div>
 
   <script>
-    let quotes = [];
-    let backgrounds = [
-      "image/bg1.png",
-      "image/bg2.png",
-      "image/bg3.png",
-      "image/bg4.png",
-      "image/bg5.png",
-      "image/bg6.png",
-      "image/bg7.png",
-    ];
+  let quotes = [];
+  let backgrounds = [
+    "image/bg1.png",
+    "image/bg2.png",
+    "image/bg3.png",
+    "image/bg4.png",
+    "image/bg5.png",
+    "image/bg6.png",
+    "image/bg7.png",
+  ];
 
-    async function fetchQuotes() {
-      try {
-        const response = await fetch("https://api.quotable.io/quotes?limit=100");
-        const data = await response.json();
-        quotes = data.results || [];
+  async function fetchQuotes() {
+    try {
+      // Use a CORS proxy to avoid browser blocking issues
+      const apiURL = "https://api.quotable.io/quotes?limit=100";
+      const proxyURL =
+        "https://api.allorigins.win/raw?url=" + encodeURIComponent(apiURL);
 
-        if (!quotes.length) {
-          throw new Error("No quotes returned from API");
-        }
+      const response = await fetch(proxyURL);
+      console.log("Fetch status:", response.status);
 
-        showQuote();
-      } catch (error) {
-        document.getElementById("quoteBox").innerText = "Failed to load quotes!";
-        document.getElementById("author").innerText = "";
-        console.error("Error fetching quotes:", error);
+      const data = await response.json();
+      console.log("API Data:", data);
+
+      quotes = data.results || []; // Make sure results exist
+
+      if (!quotes.length) {
+        throw new Error("No quotes returned from API");
       }
+
+      showQuote();
+    } catch (error) {
+      document.getElementById("quoteBox").innerText =
+        "Failed to load quotes!";
+      document.getElementById("author").innerText = "";
+      console.error("Error fetching quotes:", error);
     }
+  }
 
-    function showQuote() {
-      if (!quotes.length) return;
+  function showQuote() {
+    if (!quotes.length) return;
 
-      let randomIndex = Math.floor(Math.random() * quotes.length);
-      let q = quotes[randomIndex];
+    let randomIndex = Math.floor(Math.random() * quotes.length);
+    let q = quotes[randomIndex];
 
-      let quote = q.content || "Unknown quote";
-      let author = q.author || "Unknown";
+    let quote = q.content || "Unknown quote";
+    let author = q.author || "Unknown";
 
-      document.getElementById("quoteBox").innerText = `"${quote}"`;
-      document.getElementById("author").innerText = "- " + author;
+    document.getElementById("quoteBox").innerText = `"${quote}"`;
+    document.getElementById("author").innerText = "- " + author;
 
-      changeBackground();
-    }
+    changeBackground();
+  }
 
-    function changeBackground() {
-      let randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-      document.body.style.backgroundImage = `url('${randomBg}')`;
-    }
+  function changeBackground() {
+    let randomBg =
+      backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    document.body.style.backgroundImage = `url('${randomBg}')`;
+  }
 
-    document.getElementById("btn").addEventListener("click", showQuote);
+  document.getElementById("btn").addEventListener("click", showQuote);
 
-    fetchQuotes();
-  </script>
+  fetchQuotes();
+</script>
 </body>
 </html>
