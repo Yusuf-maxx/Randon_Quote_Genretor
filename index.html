@@ -23,18 +23,23 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       text-align: center;
       width: 450px;
+      animation: fadeIn 0.8s ease-in-out;
     }
     #quoteBox {
       font-size: 18px;
       margin: 20px 0;
       min-height: 60px;
       color: #333;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
     }
     #author {
       font-size: 16px;
       font-style: italic;
       color: #555;
       margin-bottom: 15px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
     }
     button {
       padding: 10px 20px;
@@ -44,9 +49,15 @@
       font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
     button:hover {
       background: #45a049;
+      transform: scale(1.05);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -70,7 +81,6 @@
       "image/bg7.png",
     ];
 
-    // Local fallback quotes (used when API fails)
     const fallbackQuotes = [
       { content: "The best way to get started is to quit talking and begin doing.", author: "Walt Disney" },
       { content: "Don't let yesterday take up too much of today.", author: "Will Rogers" },
@@ -91,15 +101,12 @@
         console.log("API Data:", data);
 
         quotes = data.results || [];
-
-        if (!quotes.length) {
-          throw new Error("No quotes returned from API");
-        }
+        if (!quotes.length) throw new Error("No quotes returned from API");
 
         showQuote();
       } catch (error) {
         console.warn("API failed, using fallback quotes:", error);
-        quotes = fallbackQuotes; // Use local fallback data
+        quotes = fallbackQuotes;
         showQuote();
       }
     }
@@ -107,14 +114,24 @@
     function showQuote() {
       if (!quotes.length) return;
 
-      let randomIndex = Math.floor(Math.random() * quotes.length);
-      let q = quotes[randomIndex];
-
+      let q = quotes[Math.floor(Math.random() * quotes.length)];
       let quote = q.content || "Unknown quote";
       let author = q.author || "Unknown";
 
-      document.getElementById("quoteBox").innerText = `"${quote}"`;
-      document.getElementById("author").innerText = "- " + author;
+      const quoteBox = document.getElementById("quoteBox");
+      const authorBox = document.getElementById("author");
+
+      // Hide first, then show with fade-in
+      quoteBox.style.opacity = 0;
+      authorBox.style.opacity = 0;
+
+      setTimeout(() => {
+        quoteBox.innerText = `"${quote}"`;
+        authorBox.innerText = "- " + author;
+
+        quoteBox.style.opacity = 1;
+        authorBox.style.opacity = 1;
+      }, 200);
 
       changeBackground();
     }
@@ -125,7 +142,6 @@
     }
 
     document.getElementById("btn").addEventListener("click", showQuote);
-
     fetchQuotes();
   </script>
 </body>
