@@ -23,7 +23,8 @@ It displays motivational quotes fetched from an API and changes the background i
 
 ## 📂 Project Structure
 Tip_Calculator/<br>
-│-- TipCalculator.html<br>
+│-- image <br>
+│-- index.html<br>
 │-- README.md
 
 ---
