@@ -59,69 +59,74 @@
   </div>
 
   <script>
-  let quotes = [];
-  let backgrounds = [
-    "image/bg1.png",
-    "image/bg2.png",
-    "image/bg3.png",
-    "image/bg4.png",
-    "image/bg5.png",
-    "image/bg6.png",
-    "image/bg7.png",
-  ];
+    let quotes = [];
+    let backgrounds = [
+      "image/bg1.png",
+      "image/bg2.png",
+      "image/bg3.png",
+      "image/bg4.png",
+      "image/bg5.png",
+      "image/bg6.png",
+      "image/bg7.png",
+    ];
 
-  async function fetchQuotes() {
-    try {
-      // Use a CORS proxy to avoid browser blocking issues
-      const apiURL = "https://api.quotable.io/quotes?limit=100";
-      const proxyURL =
-        "https://api.allorigins.win/raw?url=" + encodeURIComponent(apiURL);
+    // Local fallback quotes (used when API fails)
+    const fallbackQuotes = [
+      { content: "The best way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+      { content: "Don't let yesterday take up too much of today.", author: "Will Rogers" },
+      { content: "It's not whether you get knocked down, it's whether you get up.", author: "Vince Lombardi" },
+      { content: "If you are working on something exciting, it will keep you motivated.", author: "Steve Jobs" },
+      { content: "Success is not in what you have, but who you are.", author: "Bo Bennett" },
+    ];
 
-      const response = await fetch(proxyURL);
-      console.log("Fetch status:", response.status);
+    async function fetchQuotes() {
+      try {
+        const apiURL = "https://api.quotable.io/quotes?limit=100";
+        const proxyURL = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(apiURL);
 
-      const data = await response.json();
-      console.log("API Data:", data);
+        const response = await fetch(proxyURL);
+        console.log("Fetch status:", response.status);
 
-      quotes = data.results || []; // Make sure results exist
+        const data = await response.json();
+        console.log("API Data:", data);
 
-      if (!quotes.length) {
-        throw new Error("No quotes returned from API");
+        quotes = data.results || [];
+
+        if (!quotes.length) {
+          throw new Error("No quotes returned from API");
+        }
+
+        showQuote();
+      } catch (error) {
+        console.warn("API failed, using fallback quotes:", error);
+        quotes = fallbackQuotes; // Use local fallback data
+        showQuote();
       }
-
-      showQuote();
-    } catch (error) {
-      document.getElementById("quoteBox").innerText =
-        "Failed to load quotes!";
-      document.getElementById("author").innerText = "";
-      console.error("Error fetching quotes:", error);
     }
-  }
 
-  function showQuote() {
-    if (!quotes.length) return;
+    function showQuote() {
+      if (!quotes.length) return;
 
-    let randomIndex = Math.floor(Math.random() * quotes.length);
-    let q = quotes[randomIndex];
+      let randomIndex = Math.floor(Math.random() * quotes.length);
+      let q = quotes[randomIndex];
 
-    let quote = q.content || "Unknown quote";
-    let author = q.author || "Unknown";
+      let quote = q.content || "Unknown quote";
+      let author = q.author || "Unknown";
 
-    document.getElementById("quoteBox").innerText = `"${quote}"`;
-    document.getElementById("author").innerText = "- " + author;
+      document.getElementById("quoteBox").innerText = `"${quote}"`;
+      document.getElementById("author").innerText = "- " + author;
 
-    changeBackground();
-  }
+      changeBackground();
+    }
 
-  function changeBackground() {
-    let randomBg =
-      backgrounds[Math.floor(Math.random() * backgrounds.length)];
-    document.body.style.backgroundImage = `url('${randomBg}')`;
-  }
+    function changeBackground() {
+      let randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+      document.body.style.backgroundImage = `url('${randomBg}')`;
+    }
 
-  document.getElementById("btn").addEventListener("click", showQuote);
+    document.getElementById("btn").addEventListener("click", showQuote);
 
-  fetchQuotes();
-</script>
+    fetchQuotes();
+  </script>
 </body>
 </html>
