@@ -31,7 +31,7 @@ RANDON QUOTE GENERATO/<br>
 
 ## 🖼️ Preview  
 
-![Form Validator Demo](image/SS_quote1.png)
+![RANDOM QUOTE GENERATOR](image/SS_quote1.png)
 ![Form Validator Demo](image/SS_quote2.png)
 
 ---
